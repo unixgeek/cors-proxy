@@ -1,6 +1,6 @@
 use crate::{get_header, set_header};
 use worker::js_sys::Uint8Array;
-use worker::{Headers, Request, RequestInit, Response, Result};
+use worker::{console_log, Headers, Request, RequestInit, Response, Result};
 
 static IGNORE_HEADERS: [&str; 14] = [
     "cdn-loop",
@@ -44,6 +44,7 @@ pub(crate) fn create_options_response(request: Request, origin: &str) -> Result<
 }
 
 pub(crate) fn create_error_response(message: &str, status: u16, origin: &str) -> Result<Response> {
+    console_log!("{message}");
     let mut response = Response::error(message, status)?;
     set_header(
         response.headers_mut(),

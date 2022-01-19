@@ -12,11 +12,28 @@ pub async fn main(request: Request, env: Env) -> Result<Response> {
     set_panic_hook();
     log_request(&request);
 
-    let origin = get_origin(&request);
+    let origin = match get_origin(&request) {
+        Ok(o) => o,
+        Err(error) => {
+            return create_error_response(&error, 400, "*");
+        }
+    };
 
     // Check if origin is allowed.
-    if !is_allowed(&origin, env).await {
-        return create_error_response("Origin is not allowed.", 403, &origin);
+    match is_allowed(&origin, &env).await {
+        Ok(is_allowed) => {
+            if !is_allowed {
+                return create_error_response(
+                    &format!("Origin '{origin}' is not allowed."),
+                    403,
+                    &origin,
+                );
+            }
+        }
+        Err(error) => {
+            // Error could be client or code related and we need to set wildcard to *hopefully* get the response back to the client.
+            return create_error_response(&error.0, error.1, "*");
+        }
     }
 
     if request.method() == Method::Options {
