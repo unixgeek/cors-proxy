@@ -27,6 +27,7 @@ The following steps are needed to deploy cors-proxy to Cloudflare.
 
        wrangler publish
 ## Development Setup
+Optionally swap the `command` under `[build]` in `wrangler.toml` for better debugging.
 ## wrangler
 To use wrangler you will need to create a preview version of the namespace and replace `kv_namespaces` in `wrangler.toml`
 with the output.  

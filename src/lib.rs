@@ -7,6 +7,9 @@ mod helper;
 mod proxy;
 mod util;
 
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
 #[event(fetch)]
 pub async fn main(request: Request, env: Env) -> Result<Response> {
     set_panic_hook();

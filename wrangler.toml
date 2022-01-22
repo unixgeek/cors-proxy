@@ -12,7 +12,9 @@ kv_namespaces = [
 WORKERS_RS_VERSION = "0.0.7"
 
 [build]
-command = "cargo install -q worker-build && worker-build --release" # required
+command = "cargo install -q worker-build && worker-build --release"
+# For development. I have not found a way to have two commands configured: one for dev and one for release.
+#command = "cargo install -q worker-build && worker-build --dev -- --features console_error_panic_hook"
 
 [build.upload]
 dir    = "build/worker"
