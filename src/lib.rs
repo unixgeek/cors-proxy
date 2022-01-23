@@ -7,8 +7,11 @@ mod helper;
 mod proxy;
 mod util;
 
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+// Using this causes the first few bytes of a response to be mangled. Works fine in miniflare, but
+// not with wrangler dev or when published to Cloudflare.
+// https://github.com/cloudflare/workers-rs/pull/115
+// #[global_allocator]
+// static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[event(fetch)]
 pub async fn main(request: Request, env: Env) -> Result<Response> {
