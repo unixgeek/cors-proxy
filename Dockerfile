@@ -34,6 +34,6 @@ COPY --from=builder /root/build /home/nonroot/build
 COPY --from=builder /root/wrangler.toml /home/nonroot/wrangler.toml
 COPY --from=builder /root/.nvm /home/nonroot/.nvm
 
+EXPOSE 8787
 USER nonroot
-
 ENTRYPOINT ["/bin/bash", "/home/nonroot/docker-entrypoint.sh"]
