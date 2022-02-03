@@ -30,11 +30,10 @@ pub(crate) async fn is_allowed(origin: &str, env: &Env) -> Result<bool, (String,
 
     // Allowed origins is a comma separated string, so tokenize it and determine if origin is there.
     match env.kv(KV_NAMESPACE) {
-        Ok(namespace) => match namespace.get(KV_ALLOWED_ORIGINS_KEY).await {
+        Ok(namespace) => match namespace.get(KV_ALLOWED_ORIGINS_KEY).cache_ttl(3600).text().await {
             Ok(allowed_origins) => {
                 if let Some(allowed_origins) = allowed_origins {
                     Ok(allowed_origins
-                        .as_string()
                         .to_ascii_lowercase()
                         .split(',')
                         .borrow_mut()

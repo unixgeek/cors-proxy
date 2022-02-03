@@ -73,8 +73,7 @@ pub(crate) async fn copy_request(mut request: Request, target_url: &str) -> Resu
     // Copy body.
     let body = request.bytes().await?;
     if !body.is_empty() {
-        let body_as_js = Uint8Array::from(body.as_slice());
-        request_copy_init.with_body(Some(body_as_js.into()));
+        request_copy_init.with_body(Some(Uint8Array::from(body.as_slice()).into()));
     }
 
     // Create request.
