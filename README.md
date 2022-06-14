@@ -3,14 +3,13 @@ cors-proxy is a Cloudflare Worker for proxying CORS requests to resources that d
 It may also work with resources that do support CORS, but not for your origin. There are probably
 better, more technically correct solutions available -- this was a project to learn about Cloudflare
 and to be used with other pet projects.
-## Prerequisites
-1. [Rust](https://www.rust-lang.org)
-2. [wasm-pack](https://crates.io/crates/wasm-pack) (If not using rustup you will need to manually install the
-   `wasm32-unknown-unknown` target.)
-3. Cloudflare's Wrangler CLI from [@cloudflare/wrangler](https://www.npmjs.com/package/@cloudflare/wrangler) or 
-[wrangler](https://crates.io/crates/wrangler)
-4. [worker-build](https://crates.io/crates/worker-build)
-5. [miniflare](https://www.npmjs.com/package/miniflare) (You will also need [Node](https://nodejs.org/en/))
+## Requirements
+* [Rust](https://www.rust-lang.org)
+* [wasm-pack](https://crates.io/crates/wasm-pack)
+* Cloudflare's Wrangler CLI from [@cloudflare/wrangler](https://www.npmjs.com/package/@cloudflare/wrangler) or 
+* [wrangler](https://crates.io/crates/wrangler)
+* Cloudflare's build tool [worker-build](https://crates.io/crates/worker-build)
+* [miniflare](https://www.npmjs.com/package/miniflare) (You will also need [Node.js](https://nodejs.org/en/))
 
     [Miniflare](https://miniflare.dev) is optional for development. It is a Cloudflare Workers
       simulator. It is useful as it allows your worker to run on your local machine as opposed to
@@ -65,3 +64,9 @@ worker. It probably isn't useful outside that use case.
 [Cloudflare Workers](https://developers.cloudflare.com/workers/)  
 [Cloudflare worker crate](https://crates.io/crates/worker)  
 [Miniflare](https://miniflare.dev)
+
+Does -D work for miniflare? 
+^ npx miniflare seems to work.
+^ What is npx again?
+^ Should we make miniflare a dev dep?
+Review cargo vs npm wrangler
