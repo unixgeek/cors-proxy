@@ -11,7 +11,7 @@ mod util;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[event(fetch)]
-pub async fn main(request: Request, env: Env, _ctx: worker::Context) -> Result<Response> {
+pub async fn main(request: Request, env: Env, _ctx: Context) -> Result<Response> {
     set_panic_hook();
     log_request(&request);
 

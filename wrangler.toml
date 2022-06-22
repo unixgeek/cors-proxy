@@ -14,7 +14,8 @@ WORKERS_RS_VERSION = "0.0.7"
 [build]
 command = "worker-build --release"
 # For development. I have not found a way to have two commands configured: one for dev and one for release.
-#command = "worker-build --dev -- --features console_error_panic_hook"
+#command = "worker-build --dev"
+# todo wasm-pack build --debug
 
 [build.upload]
 dir    = "build/worker"

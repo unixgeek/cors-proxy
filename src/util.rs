@@ -1,6 +1,7 @@
 use cfg_if::cfg_if;
 use worker::{console_log, Date, Request};
 
+// todo dev-dependencies and features
 cfg_if! {
     // https://github.com/rustwasm/console_error_panic_hook#readme
     if #[cfg(feature = "console_error_panic_hook")] {
