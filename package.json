@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "miniflare": "~2.3.0"
+    "miniflare": "~2.5.1",
+    "@cloudflare/wrangler": "~1.19.12",
   }
 }

@@ -6,16 +6,8 @@ and to be used with other pet projects.
 ## Requirements
 * [Rust](https://www.rust-lang.org)
 * [wasm-pack](https://crates.io/crates/wasm-pack)
-* Cloudflare's Wrangler CLI from [@cloudflare/wrangler](https://www.npmjs.com/package/@cloudflare/wrangler) or 
-* [wrangler](https://crates.io/crates/wrangler)
 * Cloudflare's build tool [worker-build](https://crates.io/crates/worker-build)
-* [miniflare](https://www.npmjs.com/package/miniflare) (You will also need [Node.js](https://nodejs.org/en/))
-
-    [Miniflare](https://miniflare.dev) is optional for development. It is a Cloudflare Workers
-      simulator. It is useful as it allows your worker to run on your local machine as opposed to
-      deploying to Cloudflare with wrangler. With wrangler, your worker cannot talk to resources
-      running on your local machine, for example.
-
+* [Node.js](https://nodejs.org/en/)
 ## Initial Setup and Deployment
 The following steps are needed to deploy cors-proxy to Cloudflare.
 1. Update `account_id` in `wrangler.toml` with your account id.
@@ -29,28 +21,29 @@ The following steps are needed to deploy cors-proxy to Cloudflare.
 
        wrangler publish
 ## Development Setup
+    npm install
 Optionally swap the `command` under `[build]` in `wrangler.toml` for better debugging.
 ### wrangler
 To use wrangler you will need to create a preview version of the namespace and replace `kv_namespaces` in `wrangler.toml`
 with the output.  
 
-    wrangler kv:namespace create --preview default
+    npx wrangler kv:namespace create --preview default
 
 And a preview version of the `allowed_hostnames` key. Replace `ID` with the id from the previous step.
 
-    wrangler kv:key put allowed_hostnames "localhost,some.example.com" --namespace-id ID
+    npx wrangler kv:key put allowed_hostnames "localhost,some.example.com" --namespace-id ID
 
-Finally, run `wrangler dev` and it will build the project and allow you to preview it "locally". Remember that it is 
+Finally, run `npx wrangler dev` and it will build the project and allow you to preview it "locally". Remember that it is 
 running on the Cloudflare servers and not your local machine. 
 
-For additional debugging and profiling, run `wrangler dev --inspect`.
+For additional debugging and profiling, run `npx wrangler dev --inspect`.
 
 ### miniflare
 To update the `allowed_hostnames` key when using miniflare, modify `.mf/kv/default/allowed_hostnames`.
 
 Then run miniflare.
 
-    miniflare --kv default --kv-persist 
+    npx miniflare --kv default --kv-persist 
 
 ## Docker
 A Docker image that hosts cors-proxy with miniflare is available.
@@ -64,9 +57,3 @@ worker. It probably isn't useful outside that use case.
 [Cloudflare Workers](https://developers.cloudflare.com/workers/)  
 [Cloudflare worker crate](https://crates.io/crates/worker)  
 [Miniflare](https://miniflare.dev)
-
-Does -D work for miniflare? 
-^ npx miniflare seems to work.
-^ What is npx again?
-^ Should we make miniflare a dev dep?
-Review cargo vs npm wrangler

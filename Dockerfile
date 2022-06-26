@@ -15,9 +15,8 @@ RUN apt-get update \
     && curl --silent --show-error https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | /bin/bash \
     && source /root/.bashrc \
     && curl --silent --show-error https://rustwasm.github.io/wasm-pack/installer/init.sh | /bin/sh \
-    && rustup target add wasm32-unknown-unknown \
     && nvm install --lts \
-    && npm install -g miniflare \
+    && npm install --location=global miniflare \
     && cargo install worker-build \
     && worker-build --release \
     && sed -i 's/command =.*$/command="true"/' wrangler.toml

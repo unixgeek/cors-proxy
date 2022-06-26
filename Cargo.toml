@@ -14,9 +14,7 @@ crate-type = ["cdylib", "rlib"]
 cfg-if = "0.1.2"
 worker = "0.0.8"
 wee_alloc = "0.4.5"
-
-[dev-dependencies]
-console_error_panic_hook = "0.1.1"
+console_error_panic_hook = { version = "0.1.1", optional = true }
 
 [profile.release]
 opt-level = "z"
