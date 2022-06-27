@@ -1,6 +1,6 @@
 [package]
 name = "cors-proxy"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Gunter Wambaugh <gunter.wambaugh@gmail.com>"]
 edition = "2021"
 license = "MIT"
@@ -11,10 +11,10 @@ repository = "https://github.com/unixgeek/cors-proxy"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-cfg-if = "0.1.2"
-worker = "0.0.8"
-wee_alloc = "0.4.5"
-console_error_panic_hook = { version = "0.1.1", optional = true }
+cfg-if = "~1.0.0"
+worker = "~0.0.10"
+wee_alloc = "~0.4.5"
+console_error_panic_hook = { version = "~0.1.7", optional = true }
 
 [profile.release]
 opt-level = "z"
