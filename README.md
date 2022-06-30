@@ -3,6 +3,8 @@ cors-proxy is a Cloudflare Worker for proxying CORS requests to resources that d
 It may also work with resources that do support CORS, but not for your origin. There are probably
 better, more technically correct solutions available -- this was a project to learn about Cloudflare
 and to be used with other pet projects.
+
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/unixgeek/cors-proxy)
 ## Requirements
 * [Rust](https://www.rust-lang.org)
 * [wasm-pack](https://crates.io/crates/wasm-pack)
@@ -43,7 +45,7 @@ To update the `allowed_hostnames` key when using miniflare, modify `.mf/kv/defau
 
 Then run miniflare.
 
-    npx miniflare --kv default --kv-persist 
+       npx miniflare --kv default --kv-persist 
 
 ## Docker
 A Docker image that hosts cors-proxy with miniflare is available.
@@ -57,3 +59,6 @@ worker. It probably isn't useful outside that use case.
 [Cloudflare Workers](https://developers.cloudflare.com/workers/)  
 [Cloudflare worker crate](https://crates.io/crates/worker)  
 [Miniflare](https://miniflare.dev)
+
+TODO github action for deploy button and automatic build & deploy of docker container and worker.
+https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions

@@ -12,7 +12,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 cfg-if = "~1.0.0"
-worker = "~0.0.10"
+worker = "~0.0.9"
 wee_alloc = "~0.4.5"
 console_error_panic_hook = { version = "~0.1.7", optional = true }
 
