@@ -1,32 +1,26 @@
-use helper::*;
-use proxy::*;
-use util::*;
 use worker::*;
 
 mod helper;
 mod proxy;
 mod util;
 
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
 #[event(fetch)]
-pub async fn main(request: Request, env: Env, _ctx: worker::Context) -> Result<Response> {
-    set_panic_hook();
-    log_request(&request);
+pub async fn main(request: Request, env: Env, _ctx: Context) -> Result<Response> {
+    util::set_panic_hook();
+    util::log_request(&request);
 
-    let origin = match get_origin(&request) {
+    let origin = match helper::get_origin(&request) {
         Ok(o) => o,
         Err(error) => {
-            return create_error_response(&error, 400, "*");
+            return proxy::create_error_response(&error, 400, "*");
         }
     };
 
     // Check if origin is allowed.
-    match is_allowed(&origin, &env).await {
+    match helper::is_allowed(&origin, &env).await {
         Ok(is_allowed) => {
             if !is_allowed {
-                return create_error_response(
+                return proxy::create_error_response(
                     &format!("Origin '{origin}' is not allowed."),
                     403,
                     &origin,
@@ -35,13 +29,13 @@ pub async fn main(request: Request, env: Env, _ctx: worker::Context) -> Result<R
         }
         Err(error) => {
             // Error could be client or code related and we need to set wildcard to *hopefully* get the response back to the client.
-            return create_error_response(&error.0, error.1, "*");
+            return proxy::create_error_response(&error.0, error.1, "*");
         }
     }
 
     if request.method() == Method::Options {
         // Intercept OPTIONS (Preflight) request and don't proxy it.
-        create_options_response(request, &origin)
+        proxy::create_options_response(request, &origin)
     } else if let Some(target_url) = request
         .url()?
         .query_pairs()
@@ -51,30 +45,35 @@ pub async fn main(request: Request, env: Env, _ctx: worker::Context) -> Result<R
         })
     {
         // If the url parameter is provided, attempt to proxy the request.
-        let proxy_request = copy_request(request, &target_url).await;
+        let proxy_request = proxy::copy_request(request, &target_url).await;
         if proxy_request.is_err() {
             console_log!(
                 "There was an error copying the request. {}",
                 proxy_request.err().unwrap()
             );
-            return create_error_response("Could not copy request", 500, &origin);
+            return proxy::create_error_response("Could not copy request", 500, &origin);
         }
 
         let fetch = Fetch::Request(proxy_request.unwrap());
-        let proxy_response = fetch.send().await?;
-
-        let response = copy_response(proxy_response, &origin).await;
-        if response.is_err() {
-            console_log!(
-                "There was an error copying the response. {}",
-                response.err().unwrap()
-            );
-            return create_error_response("Could not copy response", 500, &origin);
+        match fetch.send().await {
+            Ok(proxy_response) => {
+                let response = proxy::copy_response(proxy_response, &origin).await;
+                if response.is_err() {
+                    console_log!(
+                        "There was an error copying the response. {}",
+                        response.err().unwrap()
+                    );
+                    return proxy::create_error_response("Could not copy response", 500, &origin);
+                }
+                response
+            }
+            Err(error) => {
+                console_log!("There was an error fetching the request. {}", error);
+                proxy::create_error_response(&error.to_string(), 500, &origin)
+            }
         }
-
-        response
     } else {
         // No url was provided.
-        create_error_response("Missing required url parameter.", 400, &origin)
+        proxy::create_error_response("Missing required url parameter.", 400, &origin)
     }
 }

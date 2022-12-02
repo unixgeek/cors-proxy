@@ -1,4 +1,4 @@
-use crate::{get_header, set_header};
+use crate::helper;
 use worker::js_sys::Uint8Array;
 use worker::{console_log, Headers, Request, RequestInit, Response, Result};
 
@@ -24,21 +24,21 @@ pub(crate) fn create_options_response(request: Request, origin: &str) -> Result<
     let headers = options_response.headers_mut();
 
     // Parrot back request headers with allow headers.
-    set_header(
+    helper::set_header(
         headers,
         "access-control-allow-methods",
-        &get_header(request.headers(), "access-control-request-method"),
+        &helper::get_header(request.headers(), "access-control-request-method"),
     );
-    set_header(
+    helper::set_header(
         headers,
         "access-control-allow-headers",
-        &get_header(request.headers(), "access-control-request-headers"),
+        &helper::get_header(request.headers(), "access-control-request-headers"),
     );
 
     // Set allowed origin to incoming origin.
-    set_header(headers, "access-control-allow-origin", origin);
-    set_header(headers, "access-control-allow-credentials", "true");
-    set_header(headers, "access-control-max-age", "3600");
+    helper::set_header(headers, "access-control-allow-origin", origin);
+    helper::set_header(headers, "access-control-allow-credentials", "true");
+    helper::set_header(headers, "access-control-max-age", "3600");
 
     Ok(options_response.with_status(204))
 }
@@ -46,12 +46,12 @@ pub(crate) fn create_options_response(request: Request, origin: &str) -> Result<
 pub(crate) fn create_error_response(message: &str, status: u16, origin: &str) -> Result<Response> {
     console_log!("{message}");
     let mut response = Response::error(message, status)?;
-    set_header(
+    helper::set_header(
         response.headers_mut(),
         "access-control-allow-origin",
         origin,
     );
-    set_header(response.headers_mut(), "content-type", "text/plain");
+    helper::set_header(response.headers_mut(), "content-type", "text/plain");
     Ok(response)
 }
 
@@ -65,7 +65,7 @@ pub(crate) async fn copy_request(mut request: Request, target_url: &str) -> Resu
     let mut request_copy_headers = Headers::new();
     request.headers().entries().for_each(|(key, value)| {
         if !IGNORE_HEADERS.contains(&key.as_str()) {
-            set_header(&mut request_copy_headers, &key, &value);
+            helper::set_header(&mut request_copy_headers, &key, &value);
         }
     });
     request_copy_init.with_headers(request_copy_headers);
@@ -91,10 +91,10 @@ pub(crate) async fn copy_response(mut response: Response, origin: &str) -> Resul
     // Copy headers.
     let headers_mut = response_copy.headers_mut();
     response.headers().entries().for_each(|(key, value)| {
-        set_header(headers_mut, &key, &value);
+        helper::set_header(headers_mut, &key, &value);
     });
 
-    set_header(headers_mut, "access-control-allow-origin", origin);
+    helper::set_header(headers_mut, "access-control-allow-origin", origin);
 
     Ok(response_copy.with_status(response.status_code()))
 }

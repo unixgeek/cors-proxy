@@ -1,3 +1,4 @@
-source /home/nonroot/.nvm/nvm.sh
+#!/bin/sh -e
+
 cd /home/nonroot
-miniflare --kv default --kv-persist
+exec npx wrangler dev --local --persist

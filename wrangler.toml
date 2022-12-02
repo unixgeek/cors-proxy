@@ -1,26 +1,14 @@
 name = "cors-proxy"
-type = "javascript"
+main = "build/worker/shim.mjs"
 workers_dev = true
-compatibility_date = "2022-01-05"
-account_id = "085941208821f97d3b978930bfb7f86e"
+compatibility_date = "2022-04-05"
+send_metrics = false
 
 kv_namespaces = [
     { binding = "default", preview_id = "33d9797dab5e4949ab3851100534a7cf", id = "89fee0bb99ba4c0fa78c48c256ba74b3" }
 ]
 
-[vars]
-WORKERS_RS_VERSION = "0.0.7"
-
 [build]
-command = "worker-build --release"
+#command = "worker-build --release"
 # For development. I have not found a way to have two commands configured: one for dev and one for release.
-#command = "worker-build --dev -- --features console_error_panic_hook"
-
-[build.upload]
-dir    = "build/worker"
-format = "modules"
-main   = "./shim.mjs"
-
-[[build.upload.rules]]
-globs = ["**/*.wasm"]
-type  = "CompiledWasm"
+command = "worker-build --dev --features console_error_panic_hook"
