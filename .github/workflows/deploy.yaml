@@ -1,0 +1,54 @@
+name: Build and Publish
+on:
+  push:
+    branches: ['*']
+    tags: ['*']
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    name: Deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.1.0
+      - name: Setup Rust Toolchain
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: 1.65.0
+          override: true
+          profile: minimal
+          target: wasm32-unknown-unknown
+      - name: Install wasm-pack
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: install
+          args: wasm-pack@0.10.3
+      - name: Install worker-build
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: install
+          args: worker-build@0.0.8
+      - name: Setup Node
+        uses: actions/setup-node@v3.5.1
+        with:
+          node-version: 16.18.1
+      - name: Run npm install
+        run: npm install
+      - name: Set build command in wrangler.toml
+        run: |
+          sed -i'' '/^command/d' wrangler.toml
+          sed -i'' 's/^#command/command/' wrangler.toml
+      - name: Run wrangler publish (Dry Run)
+        run: npx wrangler publish --dry-run
+      - name: Run wrangler publish
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        env:
+            CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx wrangler publish
+
+#      - name: Publish <-- Doesn't work with workers-rs
+#        uses: cloudflare/wrangler-action@2.0.0
+#        with:
+#          apiToken: ${{ secrets.CF_API_TOKEN }}
+#          wranglerVersion: '2.4.4'
