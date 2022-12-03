@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3.1.0
-      - name: Setup Rust Toolchain
+      - name: Set Up Rust Toolchain
         uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: 1.65.0
@@ -29,7 +29,7 @@ jobs:
         with:
           command: install
           args: worker-build@0.0.8
-      - name: Setup Node
+      - name: Set Up Node
         uses: actions/setup-node@v3.5.1
         with:
           node-version: 16.18.1
