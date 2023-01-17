@@ -1,4 +1,4 @@
-FROM rust:1.65.0-slim-bullseye as builder
+FROM rust:1.66.0-slim-bullseye as builder
 
 WORKDIR /root
 
@@ -14,10 +14,10 @@ RUN apt-get update \
     && sed -i 's/command =.*$/command="true"/' wrangler.toml \
     && worker-build --release \
     && mkdir /root/node \
-    && curl --silent --show-error https://nodejs.org/download/release/v16.18.1/node-v16.18.1-linux-x64.tar.xz \
+    && curl --silent --show-error https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-x64.tar.xz \
        | tar --strip-components=1 -x -J -C /root/node -f -
 
-FROM debian:bullseye-20221114-slim
+FROM debian:bullseye-20230109-slim
 
 RUN groupadd -r nonroot \
     && useradd -m -r -g nonroot nonroot

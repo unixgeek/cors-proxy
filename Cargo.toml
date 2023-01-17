@@ -1,6 +1,6 @@
 [package]
 name = "cors-proxy"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Gunter Wambaugh <gunter.wambaugh@gmail.com>"]
 edition = "2021"
 license = "MIT"
@@ -17,6 +17,8 @@ console_error_panic_hook = { version = "=0.1.7", optional = true }
 
 [profile.release]
 opt-level = "z"
+lto = true
+strip = true
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ["-Oz"]
