@@ -4,3 +4,4 @@ wasm-pack.log
 build/
 .idea
 /node_modules/
+/.wrangler/
