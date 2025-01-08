@@ -54,7 +54,7 @@ pub(crate) async fn is_allowed(origin: &str, env: &Env) -> Result<bool, (String,
         },
         Err(error) => {
             Err((format!(
-                "Error getting the namespace '{KV_ALLOWED_ORIGINS_KEY}'. {error}",
+                "Error getting the namespace '{KV_NAMESPACE}'. {error}",
             ), 500))
         }
     }

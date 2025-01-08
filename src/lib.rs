@@ -54,7 +54,7 @@ pub async fn main(request: Request, env: Env, _ctx: Context) -> Result<Response>
             return proxy::create_error_response("Could not copy request", 500, &origin);
         }
 
-        let fetch = Fetch::Request(proxy_request.unwrap());
+        let fetch = Fetch::Request(proxy_request?);
         match fetch.send().await {
             Ok(proxy_response) => {
                 let response = proxy::copy_response(proxy_response, &origin).await;
