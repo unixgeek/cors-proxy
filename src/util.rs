@@ -12,11 +12,19 @@ cfg_if! {
 }
 
 pub(crate) fn log_request(req: &Request) {
-    console_log!(
-        "{} - [{}], located at: {:?}, within: {}",
-        Date::now().to_string(),
-        req.path(),
-        req.cf().coordinates().unwrap_or_default(),
-        req.cf().region().unwrap_or_else(|| "unknown region".into())
-    );
+    if let Some(cf) = req.cf() {
+        console_log!(
+            "{} - [{}], located at: {:?}, within: {}",
+            Date::now().to_string(),
+            req.path(),
+            cf.coordinates().unwrap_or_default(),
+            cf.region().unwrap_or_else(|| "unknown region".into())
+        );
+    } else {
+        console_log!(
+            "{} - [{}],",
+            Date::now().to_string(),
+            req.path(),
+        );
+    }
 }
