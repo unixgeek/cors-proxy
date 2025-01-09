@@ -1,4 +1,3 @@
-use std::borrow::BorrowMut;
 use worker::{console_log, Env, Headers, Request, Url};
 
 static KV_NAMESPACE: &str = "default";
@@ -36,7 +35,6 @@ pub(crate) async fn is_allowed(origin: &str, env: &Env) -> Result<bool, (String,
                     Ok(allowed_origins
                         .to_ascii_lowercase()
                         .split(',')
-                        .borrow_mut()
                         .find(|o| o == &hostname)
                         .unwrap_or_default()
                         == hostname)

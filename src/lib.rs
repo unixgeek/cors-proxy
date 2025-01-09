@@ -28,7 +28,7 @@ pub async fn main(request: Request, env: Env, _ctx: Context) -> Result<Response>
             }
         }
         Err(error) => {
-            // Error could be client or code related and we need to set wildcard to *hopefully* get the response back to the client.
+            // Error could be client or code related, and we need to set wildcard to *hopefully* get the response back to the client.
             return proxy::create_error_response(&error.0, error.1, "*");
         }
     }

@@ -2,7 +2,6 @@ use cfg_if::cfg_if;
 use worker::{console_log, Date, Request};
 
 cfg_if! {
-    // https://github.com/rustwasm/console_error_panic_hook#readme
     if #[cfg(feature = "console_error_panic_hook")] {
         pub use console_error_panic_hook::set_once as set_panic_hook;
     } else {
@@ -21,10 +20,6 @@ pub(crate) fn log_request(req: &Request) {
             cf.region().unwrap_or_else(|| "unknown region".into())
         );
     } else {
-        console_log!(
-            "{} - [{}],",
-            Date::now().to_string(),
-            req.path(),
-        );
+        console_log!("{} - [{}],", Date::now().to_string(), req.path(),);
     }
 }
