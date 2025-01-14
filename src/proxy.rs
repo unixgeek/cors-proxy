@@ -61,9 +61,19 @@ pub(crate) async fn copy_request(mut request: Request, target_url: &str) -> Resu
     // Copy method.
     request_copy_init.with_method(request.method());
 
+    // https://developers.cloudflare.com/fundamentals/reference/http-request-headers/#accept-encoding
+    // Fix Accept-Encoding
+    if let Some(cf) = request.cf() {
+        console_log!("{:?}", cf);
+        if let Some(encoding) = cf.client_accept_encoding() {
+            console_log!("{encoding}");
+        }
+    }
+
     // Copy headers.
     let mut request_copy_headers = Headers::new();
     request.headers().entries().for_each(|(key, value)| {
+        console_log!("{key}:{value}");
         if !IGNORE_HEADERS.contains(&key.as_str()) {
             helper::set_header(&mut request_copy_headers, &key, &value);
         }
